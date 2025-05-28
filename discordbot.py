@@ -26,4 +26,4 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = MyClient(intents=intents)
-client.run('MTM3NzI1NTA4Njg3NDY4OTY1OA.GcaJds.dqE_w7KZeR0O3pbwM5t31wLheQ4npTx1VE8GZ4') # Replace with your own token.
+client.run('your toke here') # Replace with your own token.
