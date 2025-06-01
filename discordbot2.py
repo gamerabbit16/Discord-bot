@@ -29,12 +29,12 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
-        if message.content.startswith('memes'):
+        if message.content.startswith('memes') or message.content.startswith('Memes'):
             random_image = random.choice(images)
             if not random_image.endswith(('.png', '.jpeg', '.jpg')):
                 return
             await message.channel.send(file=discord.File(random_image))
-        if message.content.startswith('video memes'):
+        if message.content.startswith('video memes') or message.content.startswith('Video memes') or message.content.startswith('Video Memes') or message.content.startswith('video Memes'):
             random_video = random.choice(video)
             if not random_video.endswith('.mp4'):
                 return
@@ -47,9 +47,9 @@ class MyClient(discord.Client):
                 if message.content.startswith("STOP") or message.content.startswith("stop"):
                     break
                 await message.channel.send(file=discord.File(random_image))
-        if message.content.startswith("quote"):
+        if message.content.startswith("quote") or message.content.startswith("Quote"):
             await message.channel.send(response[0]['q'] + " - " + response[0]['a'])
-        if message.content.startswith("nasa image"):
+        if message.content.startswith("nasa image") or message.content.startswith("Nasa image") or message.content.startswith("NASA image") or message.content.startswith("nasa Image") or message.content.startswith("Nasa Image") or message.content.startswith("NASA Image"):
             if "url" in datata:
                 url = datata["url"]  # Replace with your image URL
                 image_content = requests.get(url).content
