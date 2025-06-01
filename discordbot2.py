@@ -15,6 +15,11 @@ images = glob.glob(random.choice(file_path_type))
 videopath = "path/*.mp4"
 video = glob.glob(videopath)
 
+url = datata["url"]  # Replace with your image URL
+image_content = requests.get(url).content
+with open("nasaimages.png", "wb") as nasaimage:
+    nasaimage.write(image_content)
+
 class MyClient(discord.Client):
     async def on_ready(self):
         activity = discord.Game(name="MEMES ! MEMES ! MEMES !", type=3)
@@ -46,7 +51,11 @@ class MyClient(discord.Client):
             await message.channel.send(response[0]['q'] + " - " + response[0]['a'])
         if message.content.startswith("nasa image"):
             if "url" in datata:
-                await message.channel.send(datata["url"])
+                url = datata["url"]  # Replace with your image URL
+                image_content = requests.get(url).content
+                with open("nasaimages.png", "wb") as nasaimage:
+                    nasaimage.write(image_content)
+                await message.channel.send(file=discord.File("nasaimages.png"))
             else:
                 await message.channel.send("Error: 'url' key not found in NASA API response.")
 
