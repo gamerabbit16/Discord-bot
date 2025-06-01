@@ -4,14 +4,15 @@ import time
 import requests
 import json
 
-def get_quote():
-  response = requests.get('https://zenquotes.io/api/quotes/q')
-  json_data = json.loads(response.text)
-  return json_data
+# Fetch a random quote from ZenQuotes API and a NASA image of the day
 
-file_path_type = ["C:/Users/PC/iCloudDrive/Stuff/*.mp4","C:/Users/PC/iCloudDrive/Stuff/*.png", "C:/Users/PC/iCloudDrive/Stuff/*.jpeg"]
+response = requests.get('https://zenquotes.io/api/today/q').json()
+
+datata = requests.get("https://api.nasa.gov/planetary/apod?api_key=your nasa token").json()
+
+file_path_type = ["path/*.mp4","path/*.png", "path/*.jpeg"]
 images = glob.glob(random.choice(file_path_type))
-videopath = "C:/Users/PC/iCloudDrive/Stuff/*.mp4"
+videopath = "path/*.mp4"
 video = glob.glob(videopath)
 
 class MyClient(discord.Client):
@@ -42,11 +43,15 @@ class MyClient(discord.Client):
                     break
                 await message.channel.send(file=discord.File(random_image))
         if message.content.startswith("quote"):
-            await message.channel.send(get_quote())
-
+            await message.channel.send(response[0]['q'] + " - " + response[0]['a'])
+        if message.content.startswith("nasa image"):
+            if "url" in datata:
+                await message.channel.send(datata["url"])
+            else:
+                await message.channel.send("Error: 'url' key not found in NASA API response.")
 
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
 
-client.run('token') # Replace with your own token.
+client.run('Token') # Replace with your own token.
