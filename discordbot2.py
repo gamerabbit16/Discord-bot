@@ -77,17 +77,14 @@ client = MyClient(intents=intents)
 @client.event
 async def on_ready():
     print(f'Logged in as {client.user} (ID: {client.user.id})')
-    print('------')
 
 @client.tree.command()
 async def memes(interaction: discord.Interaction):
-    """Says hello!"""
     random_image = random.choice(images)
     await interaction.response.send_message(file=discord.File(random_image))
 
 @client.tree.command()
 async def videosmemes(interaction: discord.Interaction):
-    """Says hello!"""
     random_video = random.choice(video)
     if not random_video.endswith('.mp4'):
         return
