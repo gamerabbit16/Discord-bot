@@ -3,6 +3,7 @@ import glob, random
 import time
 import requests
 import json
+from discord import app_commands
 
 # Fetch a random quote from ZenQuotes API and a NASA image of the day
 
@@ -20,12 +21,22 @@ image_content = requests.get(url).content
 with open("nasaimages.png", "wb") as nasaimage:
     nasaimage.write(image_content)
 
+MY_GUILD = discord.Object(id=1)  # replace with your guild id
+
 class MyClient(discord.Client):
     async def on_ready(self):
         activity = discord.Game(name="MEMES ! MEMES ! MEMES !", type=3)
         await client.change_presence(status=discord.Status.online, activity=activity)
         print('Logged on as {0}!'.format(self.user))
     
+    def __init__(self, *, intents: discord.Intents):
+        super().__init__(intents=intents)
+        self.tree = app_commands.CommandTree(self)
+
+    async def setup_hook(self):
+        self.tree.copy_global_to(guild=MY_GUILD)
+        await self.tree.sync(guild=MY_GUILD)
+
     async def on_message(self, message):
         if message.author == self.user:
             return
@@ -62,5 +73,35 @@ class MyClient(discord.Client):
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
+
+@client.event
+async def on_ready():
+    print(f'Logged in as {client.user} (ID: {client.user.id})')
+    print('------')
+
+@client.tree.command()
+async def memes(interaction: discord.Interaction):
+    """Says hello!"""
+    random_image = random.choice(images)
+    await interaction.response.send_message(file=discord.File(random_image))
+
+@client.tree.command()
+async def videosmemes(interaction: discord.Interaction):
+    """Says hello!"""
+    random_video = random.choice(video)
+    if not random_video.endswith('.mp4'):
+        return
+    await interaction.response.send_message(file=discord.File(random_video))
+
+@client.tree.command()
+async def nasaimages(interaction: discord.Interaction):
+    if "url" in datata:
+        url = datata["url"]  # Replace with your image URL
+        image_content = requests.get(url).content
+        with open("nasaimages.png", "wb") as nasaimage:
+            nasaimage.write(image_content)
+        await interaction.response.send_message(file=discord.File("nasaimages.png"))
+    else:
+        await interaction.response.send_message("Error: 'url' key not found in NASA API response.")
 
 client.run('Token') # Replace with your own token.
